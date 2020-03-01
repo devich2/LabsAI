@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrossTask.Core;
+using CrossTask.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,46 +11,43 @@ namespace CrossTask
     
     class Program
     {
+        
         static void Main(string[] args)
         {
-;           StateValidator<Person> validator = new StateValidator<Person>();
-            Boat boat = new Boat(3, Location.Left);
-            CrossSolver<Person> solver = new CrossSolver<Person>(validator, boat);
-
-            var emptyList = new List<Person>();
-            var finalList = new List<Person>(){
-                    new Person("m1"),
-                    new Person("m2"),
-                    new Person("w1"),
-                    new Person("w3"),
-                    new Person("m3"),
-                    new Person("w2"),
-                   
+            var initialElems = new List<Vessel>()
+            {
+                new Vessel(12,12),
+                new Vessel(5,0),
+                new Vessel(7,0)
             };
 
+            var finalElems = new Dictionary<Vessel, int>();
+            finalElems.Add(new Vessel(6), 2);
 
-            var initial = new State<Person>(Location.Left, finalList, emptyList);
-            var final = new State<Person>(Location.Right, emptyList, finalList);
+            State<Vessel> initial = new State<Vessel>(initialElems);
 
-            Action<List<State<Person>>> act =
-                list =>
+            Action<List<State<Vessel>>> actionPrint = list =>
+            {
+                Console.WriteLine("Decision");
+
+                initialElems.ForEach(elem => Console.Write($"{elem.Capacity}-l\t\t\t"));
+                Console.Write(Environment.NewLine);
+                Console.Write(Environment.NewLine);
+
+                int cost = 0;
+                list.ForEach(state =>
                 {
-                    Console.WriteLine("-------------Found decision----------------");
-                    list.ForEach(state => Console.WriteLine(state));
-                    Console.ReadLine();
-                    Environment.Exit(0);
-                };
+                    cost += state.Cost;
+                    Console.WriteLine(state);
+                });
+                Console.WriteLine($"\nFINAL COST - {cost}");
+                Console.WriteLine(new string('-', 10));
+            };
 
-            try
-            {
-                solver.FindPath(initial, final, act);
-            }
-            catch(NoDecisionException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            TransfuseSolver<Vessel> solver = new TransfuseSolver<Vessel>(finalElems);
+            solver.Solve(initial, actionPrint);
+
             Console.ReadLine();
-
         }
     }
 }

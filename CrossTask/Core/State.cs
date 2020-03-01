@@ -1,51 +1,43 @@
-﻿using System;
+﻿using CrossTask.Helpers;
+using CrossTask.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace CrossTask
 {
     [Serializable]
-    class State<T> : IEquatable<State<T>>
+    class State<T> : IEquatable<State<T>> where T: IEquatable<T>, ISizable
     {
-        public Location _boatPos;
-        private List<T> _left;
-        private List<T> _right;
-        public State<T> _parentState;
-        public string _step;
+        public List<T> elements;
 
+        public int Cost;
 
-        public List<T> this[Location loc]
+        public T from;
+        public T to;
+
+        public State()
         {
-            get => loc == Location.Left ? _left : _right;
-            set
-            {
-                var bank  = loc == Location.Left ? _left : _right;
-                bank = value;
-            }
+            elements = new List<T>();
         }
 
-        public State(Location boatPos, List<T> leftBank, List<T> rightBank)
+        public State(List<T> elems)
         {
-            _boatPos = boatPos;
-            _left = leftBank;
-            _right = rightBank;
+            elements = elems;
         }
 
-        public bool Equals(State<T> other)
+        public T Find(T item)
         {
-            return EqualSequence(_left, other[Location.Left])
-                && EqualSequence(_right, other[Location.Right])
-                && (_boatPos == other._boatPos);
+            return elements.Find(x => x.Equals(item));
         }
 
-        private bool EqualSequence(List<T> first, List<T> second)=>
-            first.TrueForAll(x => second.Contains(x));
-   
+        public bool Equals(State<T> other) =>
+            elements.TrueForAll(ves => other.elements.Contains(ves));
+
         public override string ToString()
         {
-            return $"\n{(_step != null ? ("Step:" + _step) : string.Empty)} " +
-                $"\nBoat pos: {_boatPos}------" +
-                $"LeftBank: {((_left.Count > 0) ? (string.Join(",", _left)) : "empty")}-------" +
-                $"RightBank: {((_right.Count > 0) ? (string.Join(",", _right)) : "empty")}";
+            return ((from != null && to != null) ? $"From {from.Capacity}-l to {to.Capacity}-l \tCost: {Cost}\n" : "") +
+                $"Vessels: {string.Join("\t", elements)}\n";
         }
     }
+   
 }

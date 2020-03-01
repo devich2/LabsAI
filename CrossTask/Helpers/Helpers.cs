@@ -7,18 +7,7 @@ using System.Text;
 
 namespace CrossTask
 {
-    static class Extensions
-    {
-        public static string ToString(this Location location)
-        {
-            switch(location)
-            {
-                case Location.Left: return "left";
-                case Location.Right: return "right";
-                default: throw new ArgumentOutOfRangeException("location");
-            }
-        }
-    }
+   
     static class Serializer
     {
         public static T DeepCopy<T>(T item)
@@ -35,6 +24,7 @@ namespace CrossTask
 
     static class Combinations
     {
+        
         private static IEnumerable<int[]> GetIndexCombination(int m, int n)
         {
             int[] result = new int[m];
@@ -49,7 +39,7 @@ namespace CrossTask
                     result[index++] = value++;
                     stack.Push(value);
                     if (index != m) continue;
-                    yield return (int[])result.Clone();
+                    yield return (int[])(result).Clone();
                     break;
                 }
             }
@@ -64,12 +54,24 @@ namespace CrossTask
             T[] result = new T[m];
             foreach (int[] j in GetIndexCombination(m, array.Count))
             {
+                //array of indexes
                 for (int i = 0; i < m; i++)
                 {
                     result[i] = array[j[i]];
                 }
                 yield return result.ToList();
             }
+            foreach (int[] j in GetIndexCombination(m, array.Count))
+            {
+                //array of indexes
+                for (int i = 0; i < m; i++)
+                {
+                    result[i] = array[j[j.Length - 1 - i]];
+                }
+                yield return result.ToList();
+            }
         }
+       
+      
     }
 }
