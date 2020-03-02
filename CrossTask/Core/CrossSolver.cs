@@ -39,11 +39,13 @@ namespace CrossTask
                             copy[state._boatPos].Remove(el);
                             copy[_destinationLocation].Add(el);
                         });
-                         copy._boatPos = _destinationLocation;
-                         copy._step = $"Group : " +
-                                $"{string.Join(", ", group.ToList())}, " +
-                                $"from {state._boatPos} to {_destinationLocation}";
 
+                        copy._boatPos = _destinationLocation;
+                        copy._step = $"Group : " +
+                            $"{string.Join(", ", group.ToList())}, " +
+                            $"from {state._boatPos} to {_destinationLocation}";
+                        _possStates.Add(copy);
+                         copy.depth++;
                         _possStates.Add(copy);
                     }
                 }
@@ -63,7 +65,7 @@ namespace CrossTask
             return result.Reverse<State<T>>().ToList();
         }
 
-        public void FindPath(State<T> initial, State<T> final, Action<List<State<T>>> action)
+        public bool FindPath(State<T> initial, State<T> final, Action<List<State<T>>> action, int depth)
         {
             Stack<State<T>> states = new Stack<State<T>>();
             List<State<T>> history = new List<State<T>>();
@@ -73,17 +75,17 @@ namespace CrossTask
 
             while (states.TryPop(out initial))
             {
-                List<State<T>> gens = GenerateStates(initial).Where(x => !history.Contains(x)).ToList();
+                List<State<T>> gens = GenerateStates(initial).Where(x => !history.Contains(x) && (x.depth < depth)).ToList();
                 history.AddRange(gens);
                
                 gens.ForEach(gn =>
                 {
                     gn._parentState = initial;
-                    if (gn.Equals(final)) action(UnWrapList(gn));
+                    if (gn.Equals(final))  action(UnWrapList(gn));
                     states.Push(gn);
                 });
             }
-            throw new NoDecisionException("No decision!");
+            return false;
         }
     }
 }
