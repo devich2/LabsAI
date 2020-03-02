@@ -9,6 +9,7 @@ namespace CrossTask
     
     class Program
     {
+        private static int _maxDepth = 40;
         static void Main(string[] args)
         {
 ;           StateValidator<Person> validator = new StateValidator<Person>();
@@ -23,7 +24,6 @@ namespace CrossTask
                     new Person("w3"),
                     new Person("m3"),
                     new Person("w2"),
-                   
             };
 
 
@@ -38,13 +38,14 @@ namespace CrossTask
                     Console.ReadLine();
                     Environment.Exit(0);
                 };
-
+      
             try
             {
                 int depth = 0;
                 while(!solver.FindPath(initial, final, act, depth))
                 {
                     Console.WriteLine($"Not found with depth < {depth}");
+                    if (depth > _maxDepth) throw new NoDecisionException("Max depth reached");
                     depth++;
                 }
              

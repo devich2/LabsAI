@@ -9,3 +9,14 @@ C:\Users\Devid\source\repos\ConsoleApp1\CrossTask\obj\Debug\netcoreapp2.1\CrossT
 C:\Users\Devid\source\repos\ConsoleApp1\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.AssemblyInfo.cs
 C:\Users\Devid\source\repos\ConsoleApp1\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.dll
 C:\Users\Devid\source\repos\ConsoleApp1\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.pdb
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\bin\Debug\netcoreapp2.1\CrossTask.deps.json
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\bin\Debug\netcoreapp2.1\CrossTask.runtimeconfig.json
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\bin\Debug\netcoreapp2.1\CrossTask.runtimeconfig.dev.json
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\bin\Debug\netcoreapp2.1\CrossTask.dll
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\bin\Debug\netcoreapp2.1\CrossTask.pdb
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.csprojAssemblyReference.cache
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.csproj.CoreCompileInputs.cache
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.AssemblyInfoInputs.cache
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.AssemblyInfo.cs
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.dll
+C:\Users\Devid\Desktop\AILabs\LabsAI\CrossTask\obj\Debug\netcoreapp2.1\CrossTask.pdb
