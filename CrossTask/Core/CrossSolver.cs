@@ -38,13 +38,13 @@ namespace CrossTask
                         {
                             copy[state._boatPos].Remove(el);
                             copy[_destinationLocation].Add(el);
-                            copy._boatPos = _destinationLocation;
-                            copy._step = $"Group : " +
+                        });
+                         copy._boatPos = _destinationLocation;
+                         copy._step = $"Group : " +
                                 $"{string.Join(", ", group.ToList())}, " +
                                 $"from {state._boatPos} to {_destinationLocation}";
 
-                            _possStates.Add(copy);
-                        });
+                        _possStates.Add(copy);
                     }
                 }
             }
