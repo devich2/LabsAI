@@ -20,7 +20,7 @@ namespace CrossTask.Core
         {
             foreach(KeyValuePair<T, int> pair in _finalElems)
             {
-                if (other.elements.Where(ves => ves.Size == pair.Key.Size).Count() != pair.Value) return false;
+                if (other.elements.Where(ves => ves.Size == pair.Key.Size).Count() < pair.Value) return false;
             }
             return true;
         }
@@ -98,7 +98,7 @@ namespace CrossTask.Core
                 closedSet.Add(initial);
             }
 
-            List<State<T>> finals = parents.Keys.Where(state => isFinal(state)).ToList();
+            List<State<T>> finals = parents.Keys.Where(state => isFinal(state)).OrderBy(x=>costs[x]).ToList();
             if (finals.Count() == 0) throw new NoDecisionException("No decision!");
             else
             {

@@ -23,7 +23,6 @@ namespace CrossTask
 
             var finalElems = new Dictionary<Vessel, int>();
             finalElems.Add(new Vessel(6), 2);
-
             State<Vessel> initial = new State<Vessel>(initialElems);
 
             Action<List<State<Vessel>>> actionPrint = list =>

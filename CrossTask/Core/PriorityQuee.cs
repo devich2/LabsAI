@@ -19,13 +19,13 @@ namespace CrossTask.Core
             _comparer = comparer;
         }
 
-        // компаратор, выделен в отдельный методом чтобы не повторяться с набором строки (той, что в теле данного метода)
+        // Компаратор в отдельный метод
         private int _comp(int x, int y)
         {
             return _comparer.Compare(_heap[x].Key, _heap[y].Key);
         }
 
-        //Стандартный метод вставки в очередь: добаявлет элемент в конец и производит просеивание на верх
+        // Добавить елемент - добавить в конець и сделать просеивание по верху
         public void Enqueue(TKey key, TValue value)
         {
             KeyValuePair<TKey, TValue> tmp = new KeyValuePair<TKey, TValue>(key, value);
@@ -33,7 +33,7 @@ namespace CrossTask.Core
             SiftUp();
         }
 
-        // Просеивание вверх по ключу TKey.    
+        // Просеивание вверх по ключу  
         private void SiftUp()
         {
             int cur = _heap.Count - 1;
@@ -47,14 +47,14 @@ namespace CrossTask.Core
                 cur = parents;
             }
         }
-        //элементов между позициями
+        // Свап елементов по позиции
         private void Swap(int cur, int parents)
         {
             KeyValuePair<TKey, TValue> tmp = _heap[parents];
             _heap[parents] = _heap[cur];
             _heap[cur] = tmp;
         }
-        // Стандартный метод - удаляет первый элемент из кучи,  возвращает значение пары
+        // Удалить елемент из кучи вернув значение через out parameter, иначе false
         public bool TryDequeue(out TValue result)
         {
             if (_heap.Count == 0)
@@ -66,6 +66,7 @@ namespace CrossTask.Core
             return true ;
         }
 
+        // Удалить елемент из кучи вернув пару
         public KeyValuePair<TKey, TValue> Dequeue()
         {
             var temp = _dequeue(0);
@@ -73,7 +74,7 @@ namespace CrossTask.Core
         }
 
         // Метод для удаления элемента по указанной позиции, возвращает значение пары 
-        // принимает из метода Dequeue значение 0 - первый элемент,принимает из метода Delete значение указанное пользователем
+        // принимает из метода Dequeue значение 0 - первый элемент, //принимает из метода Delete значение указанное пользователем
         private KeyValuePair<TKey, TValue> _dequeue(int pos)
         {
             KeyValuePair<TKey, TValue> result = _heap[pos];
@@ -84,26 +85,21 @@ namespace CrossTask.Core
         }
 
 
-        public void Delete(int pos)
-        {
-            _dequeue(pos - 1);
-        }
-
-        //Просеивание кучи вниз.
+        // Просеивание кучи вниз
         private void SiftDown(int cur)
         {
             int child = cur * 2 + 2;
 
             while (child - 1 < _heap.Count)
             {
-                if (child == _heap.Count) // рассматривается случай, когда родитель имеет только одну левую ветку
+                if (child == _heap.Count) // родитель имеет одну левую ветку
                 {
                     if (_comp(cur, child - 1) > 0)
                         Swap(cur, child - 1);
                     break;
                 }
 
-                if (_comp(child - 1, child) < 0) // если две ветки, выбираем ветку с меньшим значением 
+                if (_comp(child - 1, child) < 0) // если две ветки - выбираем ветку с меньшим значением 
                     --child;
 
                 if (_comp(cur, child) < 0) //выходим, если значение находятся в верном порядке (родитель меньше потомка)
@@ -116,12 +112,8 @@ namespace CrossTask.Core
 
         }
 
-        public bool Peek()
-        {
-            return _heap.Count > 0;
-        }
-
-        // Вывод на консоль Очереди в правильном порядке по приоритету
+        //так как к Листу значения прикрепляются в конец, Лист станет отсортированным. 
+        //принципы сортировки Бинарной кучи не будут нарушены - необходимости добавления в начало и сортировки SiftDown нет
         public void Print()
         {
             List<KeyValuePair<TKey, TValue>> tmpList = new List<KeyValuePair<TKey, TValue>>();
@@ -130,8 +122,7 @@ namespace CrossTask.Core
             {
                 KeyValuePair<TKey, TValue> tmp = Dequeue();
                 Console.WriteLine(i++ + ":\t" + tmp);
-                tmpList.Add(tmp); //так как к Листу значения прикрепляются в конец, Лист станет отсортированным. 
-                                  //принципы сортировки Бинарной кучи не будут нарушены - необходимости добавления в начало и сортировки SiftDown нет
+                tmpList.Add(tmp); 
             }
             _heap = tmpList;
         }
