@@ -5,15 +5,32 @@ using System.Text;
 
 namespace CrossTask
 {
-    class CrossSolver<T>
+    class CrossSolver<T> where T : IEquatable<Passenger>
     {
         private IValidator<T> _validator;
         private Boat boat;
+        private List<List<T>> _allowedInBoat;
+        private List<List<T>> _notAllowedAlone;
+
+        private List<int> _checkedSizeGroup;
 
         public CrossSolver(IValidator<T> checker, Boat bt)
         {
             _validator = checker;
             boat = bt;
+        }
+
+        public void SetRules(List<List<T>> allowedInBoat, List<List<T>> notAllowedAlone)
+        {
+            _allowedInBoat = allowedInBoat;
+            _notAllowedAlone = notAllowedAlone;
+
+            _checkedSizeGroup = new List<int>();
+
+            foreach (var list in allowedInBoat)
+            {
+                _checkedSizeGroup.Add(list.Count());
+            }
         }
 
         private List<State<T>> GenerateStates(State<T> state)
@@ -23,32 +40,39 @@ namespace CrossTask
 
             Location _destinationLocation = state._boatPos == Location.Left ? Location.Right : Location.Left;
 
-            for (int i = 1; i <= boat.capacity; i++)
+            for (int i = 0; i <= boat.capacity; i++)
             {
                 if (i > _source.Count) break;
                 var groups = Combinations.GetCombinations(_source, i);
-               
+
                 foreach (var group in groups)
                 {
                     State<T> copy = null;
-                    if (_validator.isValidGroup(group))
+
+                    //Если проверяемая група вышла за размер непроверяемых
+                    if ( _checkedSizeGroup.Contains(i) && !_validator.isValidBoatGroup(group, _allowedInBoat))
+                         continue;
+            
+                    copy = Serializer.DeepCopy(state);
+                    group.ForEach(el =>
                     {
-                        copy = Serializer.DeepCopy(state);
-                        group.ForEach(el =>
-                        {
-                            copy[state._boatPos].Remove(el);
-                            copy[_destinationLocation].Add(el);
-                        });
-                         copy._boatPos = _destinationLocation;
-                         copy._step = $"Group : " +
-                                $"{string.Join(", ", group.ToList())}, " +
-                                $"from {state._boatPos} to {_destinationLocation}";
+                        copy[state._boatPos].Remove(el);
+                        copy[_destinationLocation].Add(el);
+                    });
+
+                    if (_validator.isValidBankGroup(copy[state._boatPos], _notAllowedAlone))
+                    {
+                        copy._depth++;
+                        copy._boatPos = _destinationLocation;
+                        copy._step = $"Group : " +
+                           $"{string.Join(", ", group.ToList())}, " +
+                           $"from {state._boatPos} to {_destinationLocation}";
 
                         _possStates.Add(copy);
                     }
                 }
             }
-            return _possStates.Distinct().Where(x => _validator.isValidState(x)).ToList();
+            return _possStates.Distinct().ToList();
         }
 
         private static List<State<T>> UnWrapList(State<T> state)
@@ -63,27 +87,49 @@ namespace CrossTask
             return result.Reverse<State<T>>().ToList();
         }
 
-        public void FindPath(State<T> initial, State<T> final, Action<List<State<T>>> action)
+        private void ReduceQueue(int beamWidth, Queue<State<T>> states)
         {
-            Stack<State<T>> states = new Stack<State<T>>();
+            var depthStates = states.
+                OrderByDescending(x => x[Location.Right].Count()).Take(beamWidth).ToList();
+
+            states.Clear();
+            foreach (var state in depthStates)
+            {
+                states.Enqueue(state);
+            }
+        }
+
+        private bool IsCurrentLevelEmpty(int depth, Queue<State<T>> states) =>
+            states.Where(x => x._depth == depth).Count() == 0;
+
+        public bool FindPath(State<T> initial, State<T> final, Action<List<State<T>>> action, int beamWidth)
+        {
+            Queue<State<T>> states = new Queue<State<T>>();
             List<State<T>> history = new List<State<T>>();
 
-            states.Push(initial);
+            states.Enqueue(initial);
             history.Add(initial);
+            int currentDepth = 0;
 
-            while (states.TryPop(out initial))
+            while (states.TryDequeue(out initial))
             {
                 List<State<T>> gens = GenerateStates(initial).Where(x => !history.Contains(x)).ToList();
                 history.AddRange(gens);
-               
                 gens.ForEach(gn =>
                 {
+                    Console.WriteLine(gn + "\t" + gn._depth);
                     gn._parentState = initial;
                     if (gn.Equals(final)) action(UnWrapList(gn));
-                    states.Push(gn);
+                    states.Enqueue(gn);
                 });
+
+                if (IsCurrentLevelEmpty(currentDepth, states))
+                {
+                    currentDepth++;
+                    ReduceQueue(beamWidth, states);
+                }
             }
-            throw new NoDecisionException("No decision!");
+            return false;
         }
     }
 }

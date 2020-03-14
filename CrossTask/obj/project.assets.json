@@ -695,11 +695,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Devid\\source\\repos\\ConsoleApp1\\CrossTask\\CrossTask.csproj",
+      "projectUniqueName": "C:\\Users\\Devid\\Desktop\\AILabs\\LabsAI\\CrossTask\\CrossTask.csproj",
       "projectName": "CrossTask",
-      "projectPath": "C:\\Users\\Devid\\source\\repos\\ConsoleApp1\\CrossTask\\CrossTask.csproj",
+      "projectPath": "C:\\Users\\Devid\\Desktop\\AILabs\\LabsAI\\CrossTask\\CrossTask.csproj",
       "packagesPath": "C:\\Users\\Devid\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Devid\\source\\repos\\ConsoleApp1\\CrossTask\\obj\\",
+      "outputPath": "C:\\Users\\Devid\\Desktop\\AILabs\\LabsAI\\CrossTask\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

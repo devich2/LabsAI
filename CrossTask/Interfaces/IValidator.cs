@@ -6,7 +6,7 @@ namespace CrossTask
 {
     interface IValidator<T>
     {
-        bool isValidGroup(List<T> group);
-        bool isValidState(State<T> state);
+        bool isValidBoatGroup(List<T> group, List<List<T>> allowed);
+        bool isValidBankGroup(List<T> group, List<List<T>> notAllowed);
     }
 }

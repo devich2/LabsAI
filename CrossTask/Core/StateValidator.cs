@@ -5,13 +5,27 @@ using System.Text;
 
 namespace CrossTask
 {
-    class StateValidator<T> : IValidator<T> 
-        where T: ICompatible<T>
+    class StateValidator<T> : IValidator<T> where T : IEquatable<Passenger>
     {
-        public bool isValidGroup(List<T> group)=>
-            group.TrueForAll(el => el.isCompatible(group));
- 
-        public bool isValidState(State<T> state)=> 
-            isValidGroup(state[Location.Left]) && isValidGroup(state[Location.Right]);
+        public bool isValidBankGroup(List<T> group, List<List<T>> notAllowed)
+        {
+            foreach (var list in notAllowed)
+            {
+                //Если в групе находятса все елементы даного запрещенного набора пасажиров
+                if (list.TrueForAll(pass => group.Contains(pass))) return false;
+            }
+            return true;
+        }
+
+        public bool isValidBoatGroup(List<T> group, List<List<T>> allowed)
+        {
+            foreach (var list in allowed)
+            {
+                //Если даная група разрешена
+                if (list.Count() == group.Count() && (list.TrueForAll(pass => group.Contains(pass)))) return true;
+            }
+
+            return false;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace CrossTask
         private List<T> _right;
         public State<T> _parentState;
         public string _step;
-
+        public int _depth;
 
         public List<T> this[Location loc]
         {
@@ -23,11 +23,12 @@ namespace CrossTask
             }
         }
 
-        public State(Location boatPos, List<T> leftBank, List<T> rightBank)
+        public State(Location boatPos, List<T> leftBank, List<T> rightBank, int depth)
         {
             _boatPos = boatPos;
             _left = leftBank;
             _right = rightBank;
+            _depth = depth;
         }
 
         public bool Equals(State<T> other)

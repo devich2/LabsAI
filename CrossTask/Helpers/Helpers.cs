@@ -59,8 +59,14 @@ namespace CrossTask
         {
             if (array.Count < m)
                 throw new ArgumentException("Array length can't be less than number of selected elements");
+            bool passed = false;
             if (m < 1)
-                throw new ArgumentException("Number of selected elements can't be less than 1");
+            {
+                passed = true;
+                yield return new List<T>();
+            }
+            if (passed) yield break;
+
             T[] result = new T[m];
             foreach (int[] j in GetIndexCombination(m, array.Count))
             {
