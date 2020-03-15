@@ -1,0 +1,16 @@
+﻿#include @"main.ph"
+
+% privately used packages
+#include @"pfc\list\list.ph"
+#include @"pfc\commandLineParser\commandLineParser.ph"
+#include @"pfc\console\console.ph"
+#include @"pfc\core.ph"
+
+% private interfaces
+% private classes
+% implementations
+#include @"helper.pro"
+#include @"solver.pro"
+#include @"state.pro"
+#include @"vessel.pro"
+#include @"main.pro"
