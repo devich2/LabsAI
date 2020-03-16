@@ -8,6 +8,7 @@ facts
     cost : integer := 0.
     fromV : vessel := erroneous.
     toV : vessel := erroneous.
+    parent : state := erroneous.
 
 clauses
     new(Vessels) :-
@@ -20,15 +21,39 @@ clauses
     setTo(To) :-
         toV := To.
     deepCopy() = Copy :-
-        OldElems = [ L || L = list::getMember_nd(elems) ],
+        OldElems =
+            [ L ||
+                Y = list::getMember_nd(elems),
+                L = Y:deepCopy()
+            ],
         State = state::new(OldElems),
         if isErroneous(fromV) and isErroneous(toV) then
         else
-            stdio::write("here"),
-            State:setFrom(fromV),
-            State:setTo(toV)
+            State:setFrom(fromV:deepCopy()),
+            State:setTo(toV:deepCopy())
         end if,
         State:setCost(cost),
         Copy = State.
+
+clauses
+    setParent(Parent) :-
+        parent := Parent.
+    getParent() = parent.
+    empty_parent() :-
+        isErroneous(parent).
+
+clauses
+    toString() = string::format("Step: %\nState: %\n", Change, State) :-
+        if not(isErroneous(fromV)) and not(isErroneous(toV)) then
+            Change = string::format("From % to %", fromV:toString(), toV:toString())
+        else
+            Change = "No move"
+        end if,
+        StringList =
+            [ L ||
+                Y = list::getMember_nd(elems),
+                L = Y:toString()
+            ],
+        State = string::concatWithDelimiter(StringList, ", ").
 
 end implement state

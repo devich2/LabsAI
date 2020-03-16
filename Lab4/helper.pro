@@ -15,8 +15,11 @@ clauses
         N1 = N - 1,
         delete(H, L, Rest),
         varia(N1, Rest, Varia).
-    pop(E, [E | Es], Es).
 
-    push(E, Es, [E | Es]).
+    range(Low, Low, High).
+    range(Out, Low, High) :-
+        NewLow = Low + 1,
+        NewLow <= High,
+        range(Out, NewLow, High).
 
 end implement helper

@@ -6,7 +6,6 @@ class helper
 predicates
     delete : (A [out], A*, A* [out]) nondeterm.
     varia : (integer, A2*, A2* [out]) nondeterm.
-    push : (A, A*, A*) determ.
-    pop : (A, A*, A*) determ.
+    range : (integer [out], integer, integer) multi.
 
 end class helper

@@ -15,10 +15,6 @@ clauses
         vessels := Vessels,
         count := Count.
 
-    append([], X, X).
-    append([X | Y], Z, [X | W]) :-
-        append(Y, Z, W).
-
 clauses
     equals(A, B) = equal :-
         A = B,
@@ -39,50 +35,76 @@ clauses
             IndexList =
                 [ I ||
                     list::memberIndex_nd(AA, I, Vessels),
-                    AA = X
+                    AA:getSize() = X:getSize()
                 ],
             if list::length(IndexList) < list::nth(list::tryGetIndex(X, vessels), count) then
                 continue := false
             end if
         end foreach,
-        stdio::write(continue),
         if continue = false then
             fail
         end if.
 
     generateStates(State) = Result :-
-        Combs = [ L || helper::varia(2, State:getElems(), L) ],
+        Elems = State:getElems(),
+        List = [ R || helper::range(R, 0, list::length(Elems) - 1) ],
+        Combs = [ L || helper::varia(2, List, L) ],
         Result =
             [ L ||
                 Group in Combs,
-                list::nth(0, Group):isTransfusable(list::nth(1, Group)),
+                list::nth(list::nth(0, Group), Elems):isTransfusable(list::nth(list::nth(1, Group), Elems)),
                 L = changeState(State:deepCopy(), Group)
             ].
 
 clauses
-    unWrapList(Final) :-
-        exception::raise_notImplemented().
+    unWrapList(Final, Tail) = Result :-
+        if not(Final:empty_parent()) then
+            Parent = Final:getParent(),
+            Result = unWrapList(Parent, [Parent | Tail])
+        else
+            Result = Tail
+        end if.
 
 clauses
     rec_solve(Initial) :-
+        /*stdio::writef("New iter -----\n%", Initial:toString()),*/
         if isFinal(Initial) then
-            stdio::write("NICE"),
-            console::init(), % инициализация консоли
-            _ = console::readChar() % пауза, ожидания ввода строки с Enter
+            stdio::write("---------------------FOUND DECISION-----------------------------------------"),
+            List = unWrapList(Initial, [Initial]),
+            foreach X in List do
+                stdio::write(X:toString())
+            end foreach,
+            console::init(),
+            _ = console::readChar()
         else
             foreach Gen in generateStates(Initial) do
-                if list::isMember(Gen, history) then
+                if list::isMemberBy(comp, Gen, history) then
                 else
-                    stdio::write("HEILO\n"),
+                    /*stdio::writef("\nGeneratedState\n%\n", Gen:toString()),*/
+                    Gen:setParent(Initial),
                     history := list::append(history, [Gen]),
-                    stack := list::append([Gen], stack),
-                    stdio::writef("STECK%\n", list::length(stack))
+                    stack := list::append([Gen], stack)
                 end if
             end foreach,
+            /* stdio::writef("History %", list::length(history)),*/
             First = list::nth(0, stack),
             stack := list::remove(stack, First),
             rec_solve(First)
         end if.
+
+clauses
+    cp(A, B) = equal :-
+        A:getSize() = B:getSize(),
+        A:getCapacity() = B:getCapacity(),
+        !.
+    cp(_, _) = greater.
+
+    comp(A, B) = equal :-
+        Elems1 = A:getElems(),
+        Elems2 = B:getElems(),
+        same(Elems1, Elems2),
+        !.
+    comp(_, _) = greater.
 
 clauses
     solve(Initial) :-
@@ -91,16 +113,24 @@ clauses
         rec_solve(Initial).
 
 clauses
+    same([], []).
+
+    same([H1 | R1], [H2 | R2]) :-
+        H1:getSize() = H2:getSize(),
+        H1:getCapacity() = H2:getCapacity(),
+        same(R1, R2).
+
+clauses
     changeState(Initial, Group) = Result :-
-        if Index1 = list::tryGetIndex(list::nth(0, Group), Initial:getElems()) and Index2 = list::tryGetIndex(list::nth(1, Group), Initial:getElems())
-        then
-            From = list::nth(Index1, Initial:getElems()),
-            To = list::nth(Index2, Initial:getElems()),
-            Initial:setCost(From:transfuse(To)),
-            Initial:setFrom(list::nth(0, Group)),
-            Initial:setTo(list::nth(1, Group)),
-            stdio::write("Nice")
-        end if,
+        Index1 = list::nth(0, Group),
+        Index2 = list::nth(1, Group),
+        From = list::nth(Index1, Initial:getElems()),
+        To = list::nth(Index2, Initial:getElems()),
+        From1 = From:deepCopy(),
+        To1 = To:deepCopy(),
+        Initial:setFrom(From1),
+        Initial:setTo(To1),
+        Initial:setCost(From:transfuse(To)),
         Result = Initial.
 
 end implement solver

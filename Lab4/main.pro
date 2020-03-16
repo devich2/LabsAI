@@ -5,16 +5,16 @@ implement main
 
 clauses
     run() :-
-        Ves1 = vessel::new(10, 4),
-        Ves2 = vessel::new(30, 11),
-        Ves3 = vessel::new(10, 0),
-        Ves4 = vessel::new(30, 15),
-        State1 = state::new([Ves1, Ves2]),
-        Solver = solver::new([Ves3, Ves4], [1, 1]),
-        (Solver:solve(State1) and write("Yes") or write("Not")),
+        Ves1 = vessel::new(12, 12),
+        Ves2 = vessel::new(5, 0),
+        Ves3 = vessel::new(7, 0),
+        Ves4 = vessel::new(20, 6),
+        State1 = state::new([Ves1, Ves2, Ves3]),
+        Solver = solver::new([Ves4], [2]),
+        (Solver:solve(State1) and write("EndingWork") or write("NoDecision")),
         !.
-        /*(push(2, [1], L) and pop(X, L, B) and write(B) and ! or write("Bad"))*/
 
+/*(push(2, [1], L) and pop(X, L, B) and write(B) and ! or write("Bad"))*/
 end implement main
 
 goal

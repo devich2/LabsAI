@@ -23,6 +23,11 @@ clauses
         size := Size.
 
 clauses
+    toString() = string::format("%-l of % liters", capacity, size).
+    deepCopy() = Copy :-
+        Copy = vessel::new(capacity, size).
+
+clauses
     isTransfusable(Vessel) :-
         size > 0,
         Vessel:getSize() < Vessel:getCapacity().

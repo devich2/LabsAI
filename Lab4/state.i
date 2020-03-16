@@ -9,5 +9,9 @@ predicates
     setCost : (integer).
     setFrom : (vessel).
     setTo : (vessel).
+    toString : () -> string Presentation.
+    setParent : (state Parent).
+    getParent : () -> state Parent.
+    empty_parent : () determ.
 
 end interface state
