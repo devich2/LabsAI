@@ -1,7 +1,0 @@
-﻿#include @"state\state.ph"
-
-% privately used packages
-% private interfaces
-% private classes
-% implementations
-#include @"state\state.pro"

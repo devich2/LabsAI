@@ -11,7 +11,5 @@
 % private classes
 % implementations
 #include @"helper.pro"
-#include @"solver.pro"
-#include @"state.pro"
 #include @"vessel.pro"
 #include @"main.pro"

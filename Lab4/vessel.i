@@ -10,7 +10,7 @@ predicates
     setSize : (integer Size).
     isTransfusable : (vessel Vessel) nondeterm.
     transfuse : (vessel Vessel) -> integer Cost.
-    toString : () -> string Presentaion.
+    toString : () -> string Presentation.
     deepCopy : () -> vessel Copy.
 
 end interface vessel
