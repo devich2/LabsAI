@@ -6,6 +6,7 @@
 % exported interfaces
 #include @"vessel.i"
 % exported classes
+#include @"solver.cl"
 #include @"helper.cl"
 #include @"vessel.cl"
 #include @"main.cl"

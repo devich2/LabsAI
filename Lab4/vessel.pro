@@ -26,9 +26,8 @@ clauses
     %String presentation of vessel
     toString() = string::format("%-l of % liters", capacity, size).
 
-    %Copy object
-    deepCopy() = Copy :-
-        Copy = vessel::new(capacity, size).
+    %Clone object
+    clone() = vessel::new(capacity, size).
 
 clauses
 %We transfuse only from non-empty can and to non-full can :)

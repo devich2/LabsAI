@@ -11,6 +11,6 @@ predicates
     isTransfusable : (vessel Vessel) nondeterm.
     transfuse : (vessel Vessel) -> integer Cost.
     toString : () -> string Presentation.
-    deepCopy : () -> vessel Copy.
+    clone : () -> vessel Copy.
 
 end interface vessel
