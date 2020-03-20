@@ -1,2 +1,2 @@
-"C:\Users\Devid\Desktop\Lab4\exe\Lab4.exe" 
+"C:\Users\Devid\Desktop\AILabs\LabsAI\Lab4\exe\Lab4.exe" 
 pause

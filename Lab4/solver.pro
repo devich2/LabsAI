@@ -6,6 +6,7 @@ implement solver
 class facts
     isFinalState : boolean := true.
     goalState : mapM{integer, integer} := erroneous.
+    final : state := s([vessel::new(12, 6), vessel::new(5, 0), vessel::new(7, 6)]).
 
 %Check if transfusable
 clauses
@@ -36,6 +37,9 @@ clauses
         MoveList = solve1(Init, [Init]),
         !.
 
+    solve1(final, _) = [] :-
+        !.
+
     solve1(S, PreviousStates) = [Move | MoveList] :-
         List = [ R || helper::range(R, 0, 2) ],
         helper::varia(2, List, L),
@@ -48,9 +52,9 @@ clauses
         else
             MoveList = solve1(S2, [S2 | PreviousStates])
         end if.
-        %----------------------Help clauses-------------------------------
-%String presentation of state
 
+%----------------------Help clauses-------------------------------
+%String presentation of state
 clauses
     toString(s(Elems)) =
         string::concatWithDelimiter(
