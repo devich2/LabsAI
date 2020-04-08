@@ -4,6 +4,7 @@
 class facts
     initState : state := s([vessel::new(12, 12), vessel::new(5, 0), vessel::new(7, 0)], no_move).
     final : mapM{integer, integer} := initGoal().
+    trLtr : integer := 0.
 
 class predicates
     initGoal : () -> mapM{integer, integer}.
@@ -20,8 +21,13 @@ clauses
             { (A) :-
                 write("--------------------------FOUND DECISION-------------------------"),
                 foreach W in A do
-                    writef("\n%\n", solver::toString(W))
-                end foreach
+                    writef("\n%\n", solver::toString(W)),
+                    if s(Elems, m(_, _, Cost)) = W then
+                        trLtr := trLtr + Cost
+                    end if
+                end foreach,
+                writef("TotalSteps: %\n", length(A)),
+                writef("Transfused liters: %", trLtr)
             },
         solver::solve(initState, final, Print),
         !

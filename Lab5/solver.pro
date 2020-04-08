@@ -58,7 +58,7 @@ clauses
             if legalTransfusion(Cm, S) then
                 move_nd(S, S2, Cm, StateCost),
                 if not(isMemberBy(comp, S2, PreviousStates)) then
-                    priorQ := priorityQueue::insert(priorQ, StateCost, S2)
+                    priorQ := priorityQueue::insert(priorQ, StateCost - getHeuristicCost(S2), S2)
                 end if,
                 if not(_ = costs:tryGet(S2)) then
                     costs:set(S2, maxValue)
@@ -78,9 +78,24 @@ clauses
             priorQ := priorityQueue::deleteLeast(priorQ),
             Result = solve1(Min, [Min | PreviousStates])
         end if.
+
+    getAverageEstimation(Elems) =
+        foldl1(
+                [ L ||
+                    Y = getMember_nd(Elems),
+                    L = Y:getSize()
+                ],
+                { (A, B) = A + B }) quot length(ELems).
+    countNonEmpty(Elems) =
+        length(
+            [ L ||
+                L = getMember_nd(Elems),
+                not(L:getSize() = 0)
+            ]).
+    getHeuristicCost(s(Elems, _)) = getAverageEstimation(Elems) * countNonEmpty(Elems).
+
 %----------------------Help clauses-------------------------------
 %String presentation of state
-
 clauses
     toString(S) = Result :-
         if s(_, m(From, To, Cost)) = S then

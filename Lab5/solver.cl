@@ -20,5 +20,8 @@ predicates
     same : (vessel*, vessel*) determ.
     comp : comparator{state, state}.
     unWrapList : (state, state* [out]).
+    getHeuristicCost : (state) -> integer.
+    getAverageEstimation : (vessel*) -> integer.
+    countNonEmpty : (vessel*) -> integer.
 
 end class solver
