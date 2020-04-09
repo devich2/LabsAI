@@ -10,8 +10,9 @@ class facts
     costs : mapM{state, integer} := mapM_redBlack::new().
     parents : mapM{state, state} := mapM_redBlack::new().
     maxValue : integer := 1000.
-
+    euristic : boolean := false.
 %Check if transfusable
+
 clauses
     legalTransfusion(L, s(Elems, _)) :-
         First = nth(nth(0, L), Elems),
@@ -43,8 +44,9 @@ clauses
 
 %DFS algorythm
 clauses
-    solve(Init, GoalState, Action) :-
+    solve(Init, GoalState, Action, Eur) :-
         goalState := GoalState,
+        euristic := Eur,
         costs:set(Init, 0),
         Result = solve1(Init, [Init]),
         Action(Result),
@@ -92,7 +94,12 @@ clauses
                 L = getMember_nd(Elems),
                 not(L:getSize() = 0)
             ]).
-    getHeuristicCost(s(Elems, _)) = getAverageEstimation(Elems) * countNonEmpty(Elems).
+    getHeuristicCost(s(Elems, _)) = Result :-
+        if euristic = true then
+            Result = getAverageEstimation(Elems) * countNonEmpty(Elems)
+        else
+            Result = 0
+        end if.
 
 %----------------------Help clauses-------------------------------
 %String presentation of state

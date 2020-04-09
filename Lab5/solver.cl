@@ -11,7 +11,7 @@ domains
     action = (state*).
 
 predicates
-    solve : (state InitState, mapM{integer, integer} GoatState, action Action) determ.
+    solve : (state InitState, mapM{integer, integer} GoatState, action Action, boolean Eur) determ.
     solve1 : (state S1, state*) -> state* List nondeterm.
     move_nd : (state Before, state After [out], integer* Group, integer Cost [out]).
     legalTransfusion : (integer* L, state State) nondeterm.
